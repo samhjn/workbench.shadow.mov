@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="zh-CN" data-active-lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ShadowMov Workbench</title>
+  <meta name="description" content="ShadowMov Workbench" />
+  <meta property="og:title" content="ShadowMov Workbench" />
+  <meta property="og:description" content="Personal projects by ShadowMov" />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#efe7d3" />
+  <style>
+    :root {
+      --bg: #efe7d3;
+      --paper: #fff9e9;
+      --paper-2: #f8efd8;
+      --ink: #221d17;
+      --muted: #756b5c;
+      --line: #2b251e;
+      --soft-line: rgba(43, 37, 30, .22);
+      --accent: #ba4e24;
+      --accent-2: #2f5e4e;
+      --shadow: 8px 8px 0 rgba(43, 37, 30, .16);
+      --max: 1060px;
+      --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      --mono: "SF Mono", "Roboto Mono", "Cascadia Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.5;
+      background:
+        linear-gradient(rgba(43, 37, 30, .045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(43, 37, 30, .035) 1px, transparent 1px),
+        var(--bg);
+      background-size: 28px 28px;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 28px 0 20px;
+    }
+
+    .bench-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: start;
+      border: 2px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 34px);
+    }
+
+    .eyebrow,
+    .tag,
+    .slot-label,
+    .project-meta,
+    .button,
+    footer {
+      font-family: var(--mono);
+      letter-spacing: .02em;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(40px, 7vw, 78px);
+      line-height: .9;
+      letter-spacing: -.065em;
+    }
+
+    .intro {
+      margin: 14px 0 0;
+      max-width: 660px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      border: 2px solid var(--line);
+      background: var(--paper-2);
+    }
+
+    .lang-switch button {
+      appearance: none;
+      border: 0;
+      border-right: 2px solid var(--line);
+      background: transparent;
+      padding: 7px 11px;
+      color: var(--ink);
+      font: 700 12px var(--mono);
+      cursor: pointer;
+    }
+
+    .lang-switch button:last-child { border-right: 0; }
+
+    .lang-switch button[aria-pressed="true"] {
+      background: var(--line);
+      color: var(--paper);
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1.5px solid var(--line);
+      background: #fffdf4;
+      padding: 6px 10px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    main {
+      padding: 26px 0 52px;
+    }
+
+    .shelf {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 18px;
+      margin-bottom: 18px;
+      align-items: stretch;
+    }
+
+    .shelf-card {
+      border: 2px solid var(--line);
+      background: var(--accent-2);
+      color: #fff9e9;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .shelf-title {
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: -.04em;
+      font-weight: 800;
+    }
+
+    .shelf-card p {
+      margin: 16px 0 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255, 249, 233, .82);
+    }
+
+    .tags {
+      border: 2px solid var(--line);
+      background: var(--paper-2);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-content: center;
+    }
+
+    .tag {
+      display: inline-flex;
+      border: 1.5px solid var(--line);
+      background: var(--paper);
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .projects {
+      display: grid;
+      gap: 16px;
+    }
+
+    .project {
+      position: relative;
+      display: grid;
+      grid-template-columns: 168px minmax(0, 1fr);
+      border: 2px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .project::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      top: -9px;
+      width: 74px;
+      height: 16px;
+      background: rgba(186, 78, 36, .22);
+      border: 1px solid rgba(43, 37, 30, .18);
+      transform: rotate(-1.5deg);
+    }
+
+    .slot {
+      border-right: 2px solid var(--line);
+      background:
+        repeating-linear-gradient(-45deg, rgba(43, 37, 30, .035) 0, rgba(43, 37, 30, .035) 8px, transparent 8px, transparent 16px),
+        var(--paper-2);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .slot-no {
+      font: 800 42px/.9 var(--mono);
+      letter-spacing: -.06em;
+    }
+
+    .slot-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .project-body {
+      padding: 20px 22px 22px;
+    }
+
+    .project-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1.5px solid var(--soft-line);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(30px, 4.6vw, 52px);
+      line-height: .95;
+      letter-spacing: -.055em;
+    }
+
+    .project-meta {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      padding-top: 6px;
+    }
+
+    .one-line {
+      margin: 15px 0 16px;
+      max-width: 760px;
+      font-size: 16px;
+    }
+
+    .specs {
+      display: grid;
+      gap: 8px;
+    }
+
+    .spec {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 14px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--soft-line);
+      font-size: 14px;
+    }
+
+    .spec:first-child { border-top: 0; padding-top: 0; }
+
+    .spec-label {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .button.primary {
+      background: var(--line);
+      color: var(--paper);
+    }
+
+    footer {
+      padding: 18px 0 34px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    [data-lang] { display: none; }
+
+    html[data-active-lang="zh"] [data-lang="zh"],
+    html[data-active-lang="en"] [data-lang="en"] { display: revert; }
+
+    html[data-active-lang="en"] #hamlearn { display: none; }
+
+    @media (max-width: 760px) {
+      .bench-top,
+      .shelf,
+      .project {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        align-items: flex-start;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .slot {
+        border-right: 0;
+        border-bottom: 2px solid var(--line);
+        padding: 14px 16px;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .project-head {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .project-meta {
+        white-space: normal;
+      }
+
+      .spec {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap bench-top">
+      <div>
+        <p class="eyebrow">ShadowMov / Workbench</p>
+        <h1><span data-lang="zh">ShadowMov Workbench</span><span data-lang="en">ShadowMov Workbench</span></h1>
+        <p class="intro"><span data-lang="zh">一些自己做的小工具和应用，放在这里方便查看。</span><span data-lang="en">Small tools and apps I have built, shipped, or kept refining.</span></p>
+      </div>
+      <div class="controls">
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-set-lang="zh" aria-pressed="true">中文</button>
+          <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <nav class="nav" aria-label="Navigation">
+          <a href="https://github.com/samhjn" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://shadow.mov" target="_blank" rel="noreferrer">shadow.mov</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="shelf" aria-label="Workshop shelf">
+      <div class="shelf-card">
+        <div class="shelf-title"><span data-lang="zh">工作台</span><span data-lang="en">Workbench</span></div>
+        <p><span data-lang="zh">iOS / Web / Radio / Firmware</span><span data-lang="en">iOS / Web / Radio / Firmware</span></p>
+      </div>
+      <div class="tags">
+        <span class="tag">SwiftUI</span>
+        <span class="tag">SwiftData</span>
+        <span class="tag">Core Data</span>
+        <span class="tag">WKWebView</span>
+        <span class="tag">Binwalk</span>
+        <span class="tag">Amateur Radio</span>
+      </div>
+    </section>
+
+    <section class="projects" aria-label="Projects">
+      <article class="project" id="easyqso">
+        <div class="slot">
+          <div class="slot-no">01</div>
+          <div class="slot-label">iOS · Radio</div>
+        </div>
+        <div class="project-body">
+          <div class="project-head">
+            <h2>EasyQSO</h2>
+            <div class="project-meta">App Store · GPLv3</div>
+          </div>
+          <p class="one-line"><span data-lang="zh">业余无线电通联日志 app。</span><span data-lang="en">An iOS logbook app for amateur radio QSOs.</span></p>
+          <div class="specs">
+            <div class="spec"><div class="spec-label"><span data-lang="zh">功能</span><span data-lang="en">Features</span></div><div><span data-lang="zh">记录、查询、编辑 QSO；ADIF / CSV 导入导出；网格坐标和卫星通联字段。</span><span data-lang="en">QSO recording, search, editing, ADIF / CSV import and export, grid square and satellite contact fields.</span></div></div>
+            <div class="spec"><div class="spec-label"><span data-lang="zh">技术</span><span data-lang="en">Tech</span></div><div>SwiftUI · Core Data · iOS 14+</div></div>
+          </div>
+          <div class="links">
+            <a class="button primary" data-lang="zh" href="https://apps.apple.com/cn/app/easyqso/id6761302218" target="_blank" rel="noreferrer">App Store</a>
+            <a class="button primary" data-lang="en" href="https://apps.apple.com/us/app/easyqso/id6761302218" target="_blank" rel="noreferrer">App Store</a>
+            <a class="button" href="https://github.com/samhjn/EasyQSO" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="iclaw">
+        <div class="slot">
+          <div class="slot-no">02</div>
+          <div class="slot-label">iOS · Agent</div>
+        </div>
+        <div class="project-body">
+          <div class="project-head">
+            <h2>iClaw</h2>
+            <div class="project-meta">TestFlight · MIT</div>
+          </div>
+          <p class="one-line"><span data-lang="zh">原生 iOS AI Agent app。</span><span data-lang="en">A native iOS AI agent app.</span></p>
+          <div class="specs">
+            <div class="spec"><div class="spec-label"><span data-lang="zh">功能</span><span data-lang="en">Features</span></div><div><span data-lang="zh">多 Agent、会话管理、工具调用、本地存储、JS 执行和浏览器自动化。</span><span data-lang="en">Multiple agents, session management, tool calling, local storage, JavaScript execution, and browser automation.</span></div></div>
+            <div class="spec"><div class="spec-label"><span data-lang="zh">技术</span><span data-lang="en">Tech</span></div><div>Swift · SwiftUI · SwiftData · WKWebView · SSE</div></div>
+          </div>
+          <div class="links">
+            <a class="button primary" data-lang="zh" href="https://testflight.apple.com/join/Uq7vKNjS" target="_blank" rel="noreferrer">TestFlight</a>
+            <a class="button primary" data-lang="en" href="https://testflight.apple.com/join/KSWT5YQY" target="_blank" rel="noreferrer">TestFlight</a>
+            <a class="button" href="https://github.com/samhjn/iClaw" target="_blank" rel="noreferrer">GitHub</a>
+            <a class="button" href="https://iclaw.shadow.mov" target="_blank" rel="noreferrer">Website</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="unrolling">
+        <div class="slot">
+          <div class="slot-no">03</div>
+          <div class="slot-label">Web · Firmware</div>
+        </div>
+        <div class="project-body">
+          <div class="project-head">
+            <h2>unroll.ing</h2>
+            <div class="project-meta">Web Tool</div>
+          </div>
+          <p class="one-line"><span data-lang="zh">在线 Binwalk 工具。</span><span data-lang="en">A web-based Binwalk tool.</span></p>
+          <div class="specs">
+            <div class="spec"><div class="spec-label"><span data-lang="zh">功能</span><span data-lang="en">Features</span></div><div><span data-lang="zh">上传文件，查看 offset、size、description，导出结果，按偏移抽取片段。</span><span data-lang="en">Upload files, inspect offset, size, and description, export results, and extract by offset.</span></div></div>
+            <div class="spec"><div class="spec-label"><span data-lang="zh">用途</span><span data-lang="en">Use</span></div><div><span data-lang="zh">固件、镜像、嵌入式设备文件的初步分析。</span><span data-lang="en">Initial analysis for firmware, images, and embedded-device files.</span></div></div>
+          </div>
+          <div class="links">
+            <a class="button primary" href="https://www.unroll.ing/" target="_blank" rel="noreferrer">Open</a>
+            <a class="button" href="https://v2.unroll.ing/" target="_blank" rel="noreferrer">Legacy v2</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="hamlearn">
+        <div class="slot">
+          <div class="slot-no">04</div>
+          <div class="slot-label">Web · Radio</div>
+        </div>
+        <div class="project-body">
+          <div class="project-head">
+            <h2>hamlearn</h2>
+            <div class="project-meta">exam.bh5hsu.com</div>
+          </div>
+          <p class="one-line"><span data-lang="zh">中国业余无线电考试练习网站。</span><span data-lang="en">A practice site for China's amateur radio operator exams.</span></p>
+          <div class="specs">
+            <div class="spec"><div class="spec-label"><span data-lang="zh">功能</span><span data-lang="en">Features</span></div><div><span data-lang="zh">A / B / C 类题库练习、模拟考试、错题、收藏、题目解析。</span><span data-lang="en">Class A / B / C practice, mock exams, wrong-question review, favorites, and explanations.</span></div></div>
+          </div>
+          <div class="links">
+            <a class="button primary" href="https://exam.bh5hsu.com/" target="_blank" rel="noreferrer">Open</a>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap"><span data-lang="zh">© 2026 ShadowMov</span><span data-lang="en">© 2026 ShadowMov</span></div>
+  </footer>
+
+  <script>
+    const html = document.documentElement;
+    const buttons = document.querySelectorAll('[data-set-lang]');
+    const saved = localStorage.getItem('lang');
+    const preferred = navigator.language && navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+    const initial = saved || preferred;
+
+    function setLang(lang) {
+      html.dataset.activeLang = lang;
+      html.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      localStorage.setItem('lang', lang);
+      buttons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.setLang === lang)));
+      document.title = 'ShadowMov Workbench';
+    }
+
+    buttons.forEach((button) => button.addEventListener('click', () => setLang(button.dataset.setLang)));
+    setLang(initial === 'zh' ? 'zh' : 'en');
+  </script>
+</body>
+</html>
